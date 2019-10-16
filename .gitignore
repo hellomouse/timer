@@ -59,3 +59,6 @@ typings/
 
 # next.js build output
 .next
+
+# Create React App build output
+build/

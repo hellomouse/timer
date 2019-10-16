@@ -2,7 +2,7 @@
   "name": "simple-timer",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://hellomouse.net/timer",
+  "homepage": "https://hellomouse.net/timer/",
   "dependencies": {
     "prop-types": "^15.7.2",
     "react": "^16.10.2",
