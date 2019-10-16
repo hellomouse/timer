@@ -300,7 +300,7 @@ class Timer extends React.Component {
       <br/><br/>
       <button
         onClick={this.clearAllTimers.bind(this)}
-        style={{ width: '170px' }}
+        style={{ width: 'auto' }}
         title="Clear all saved timers"
       >Clear saved timers</button>
     </div>;
