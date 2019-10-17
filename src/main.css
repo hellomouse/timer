@@ -1,54 +1,148 @@
 @import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
+@import url('https://fonts.googleapis.com/css?family=Nunito&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 @keyframes blink {
 	50% { opacity: 0; }
 }
 
-/* why is this not the default */
-input[type=number]::-webkit-inner-spin-button {
-	opacity: 1
+body {
+	font-family: 'Nunito', sans-serif;
+	background-color: #f5f5f5;
+
+	padding: 0;
+	margin: 0;
 }
 
-button {
-	padding: 12px 16px;
-	background-color: #ddd;
+/* Why is this not the default (Show number arrows) */
+input[type=number]::-webkit-inner-spin-button {
+	opacity: 1;
+}
 
-	width: 95px;
-	font-size: 16px;
-	
-	border: none;
-	box-shadow: 0px 0px 15px 0px rgba(0,0,0,0.15);
-	margin: 2px;
-	transition: all 0.2s;
+/* Align material icons better */
+i {
+	position: relative;
+	top: 3px;
+}
+
+
+button {
+	font-size: 12pt;
+	font-family: 'Nunito', sans-serif; /* Buttons don't this inherit from body */
 }
 
 button:hover {
-	background-color: #eee;
-	box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.18);
-	transition: all 0.2s;
+	cursor: pointer;
 }
 
+/* Generic button class */
+.button {
+	width: 95px;
+	border: none;
+	margin: 2px;
+	padding: 9px 12px;
+
+	box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+	color: white;
+	transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.button:hover {
+	background-color: #546e7a;
+	transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+/* Clear (delete) button */
+.delete-button {
+	padding: 7px 12px;
+	width: auto;
+	background-color: #c62828;
+}
+.delete-button:hover {
+	background-color: #d32f2f;
+}
+
+/* Symbol button (just a symbol) */
+.symbol-button {
+	width: auto;
+	background-color: rgba(0, 0, 0, 0) !important;
+	box-shadow: none !important;
+	color: black;
+	border: none !important;
+	transition: color 0.2s;
+	padding: 0;
+}
+
+.symbol-button i {
+	font-size: 70pt;
+	top: 28px;
+}
+
+.symbol-button:hover {
+	transition: color 0.2s;
+	color: #333;
+}
+
+/* Button that looks like an <a> tag */
+.text-button {
+	/* Get rid of any button styling */
+	background-color: rgba(0, 0, 0, 0);
+	border: none;
+	outline: none;
+	width: auto;
+
+	/* Text styling */
+	color: #777;
+	text-decoration: underline;
+
+}
+
+/* Large text button */
+.large-text-button {
+	width: auto;
+	background-color: rgba(0, 0, 0, 0) !important;
+	box-shadow: none !important;
+	color: black;
+	border: none !important;
+	font-size: 20pt;
+	color: #777;
+	transition: color 0.2s;
+}
+
+.large-text-button:hover {
+	transition: color 0.2s;
+	color: #999;
+}
+
+/* Input types */
 input {
-	padding: 8px 0px;
+	padding: 9px 24px;
 	margin: 2px;
 	font-family: 'Open Sans', sans-serif;
 	
 	border: none;
 	border-bottom: 1.5px solid #ddd;
-	font-size: 24px;
+	font-size: 15pt;
 	transition: all 0.2s;
 }
 
 input.time {
+	padding: 9px 0px;
 	width: 120px;
 	text-align: center;
 }
 
 input:focus {
 	outline: 0;
-	border-color: #2196f3;
+	border-color: #aaa;
 	transition: all 0.2s;
+}
+
+.text-input-fullwidth {
+	width: 390px;
+	max-width: 80%;
 }
 
 .container {
@@ -61,15 +155,103 @@ input:focus {
 	padding-bottom: 5vh;
 }
 
+/* Timer numbers */
+@keyframes color_blink {
+	from { opacity: 1 }
+	to { opacity: 0.2 }
+}
+
 .number {
-	font-size: 20vw;
+	font-size: 13vw;
 	font-family: 'Roboto Mono', monospace;
+	margin-bottom: -40px;
 }
 
-.number-pause {
-	animation: blink 1s step-end infinite;
+.number-pause { animation: color_blink 1s ease-in-out infinite alternate; }
+.number-ended { color: #e00000; }
+
+/* Text, fixed on bottom right */
+.bottom-text {
+	position: fixed;
+	right: 10px;
+	bottom: 0;
 }
 
-.number-ended {
-	color: #e00000;
+/* Contains all the settings */
+.settings-container {
+	/* Sizing */
+	width: 40%;
+	min-width: 400px;
+	padding: 0;
+	padding-bottom: 20px;
+
+	/* Positioning (Center) */
+	margin: auto;
+	
+	/* Deco */
+	/* box-shadow: 0px 0px 25px 0px rgba(0,0,0,0.1);
+	background-color: #fafafa; */
 }
+
+
+@media only screen and (max-width: 600px) {
+	.settings-container {
+		box-shadow: none;
+		width: 100%;
+		margin: 0;
+	}
+}
+
+
+/* Buttons that toggle input state between NLP and numeric 
+ * toggle-input-mode-btn-1 is NLP (Left), toggle-input-mode-btn-2
+ * is numeric (Right) */
+.toggle-input-mode-btn {
+	/* Line up side by side */
+	display: inline-block;
+	margin: 0px;
+
+	/* Size styling */
+	width: 220px;
+	max-width: 70%;
+	
+	font-size: 10pt;
+	text-transform: uppercase;
+
+	/* Remove default button styling */
+	padding: 0;
+	border: none;
+	outline: none;
+
+	/* Color styling */
+	background-color: #222; /* #455a64; */
+	color: white;
+	transition: background-color 0.2s;
+	box-shadow: 0px 3px 25px 0px rgba(0,0,0,0.15);
+}
+
+.toggle-input-mode-btn p {
+	padding: 10px 1px;
+	margin: 0;
+}
+
+.toggle-input-mode-btn:hover {
+	background-color: #333/* #546e7a */;
+}
+
+.toggle-input-mode-btn.transition {
+	background-color: #444/* #607d8b */;
+}
+
+/* Toggle direction of type selector
+ * See https://stackoverflow.com/a/28623513 */
+.toggle-input-mode-btn:after {
+	display: block;
+	content: '';
+	border-bottom: solid 4px #777;  
+	transform: scaleX(0);  
+	transition: transform 250ms ease-in-out;
+}
+.toggle-input-mode-btn.transition:after {transform: scaleX(1); }
+.toggle-input-mode-btn.right:after{ transform-origin:100% 50%; }
+.toggle-input-mode-btn.left:after{  transform-origin:  0% 50%; }

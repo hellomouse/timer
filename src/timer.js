@@ -31,6 +31,7 @@ class Timer extends React.Component {
       seconds: 0,
       lastOffset: 0, // last offset of the timer loop
       name: props.name || null, // custom name assigned to timer
+      useNLPInput: false, // Use NLP input (if false then use numeric)
 
       input_hours: '', // string values used in input fields
       input_minutes: '',
@@ -163,6 +164,11 @@ class Timer extends React.Component {
       display: this._formatTime(0, 0, 0)
     });
   }
+  /** Pause button toggle functionality - starts or unpauses */
+  pauseButtonStart() {
+    if (!this.state.started) this.start();
+    else this.unpause();
+  }
   /**
    * Prettify a digit for the timer
    * @param {number|string} num Value to prettify
@@ -261,48 +267,103 @@ class Timer extends React.Component {
     });
     this.storageName = 'timerState';
   }
+  /**
+   * Toggles input type
+   * @param {boolean} useNLP
+   * */
+  toggleInputType(useNLP) {
+    console.log(useNLP)
+    this.setState({
+      useNLPInput: useNLP
+    });
+  }
+  /**
+   * Returns string representing when timer ends
+   * @return {string}
+   */
+  getTimerEnd() {
+    if (this.state.paused) return 'an indeterminate time';
+    return new Date(this.state.endTime).toISOString();
+  }
   render() {
     return <div className='container'>
       <div className={'number' + (this.state.ended ?
         ' number-ended' : '') + (this.state.paused ?
         ' number-pause' : '')}>{this.state.display}</div>
-      <br/>
-      {['hours', 'minutes', 'seconds'].map(name =>
-        <input
-          name={name} key={name} type="number" placeholder={name} title={name}
-          className="time" value={this.state['input_' + name]}
-          onChange={this.handleTimeInputChange.bind(this)}
-          onBlur={this.handleTimeInputBlur.bind(this)}
-          onKeyPress={this.handleTimeInputEnter.bind(this)}
-        />
-      )}
-      <button
-        onClick={this.resetInput.bind(this)}
-        title="Clear time input fields"
-      >Clear</button>
-      <br/>
-      <input
-        name="name" type="text" placeholder="timer name"
-        size="15" title="Create or load a timer with given name"
-        value={this.state.input_name}
-        onChange={event => this.setState({ input_name: event.target.value })}
-        onBlur={this.handleSetName.bind(this)}
-        onKeyPress={event => {
-          if (event.key === 'Enter') this.handleSetName();
-        }}
-      />
-      <br/><br/>
-      <button onClick={this.start.bind(this)}>Start</button>
+      <br />
+      <small style={{ 'color': '#aaa' }}>Timer will end at {this.getTimerEnd()}</small>
+      <br />
+
+      <button onClick={this.start.bind(this)} className="button large-text-button">Start</button>
       {this.state.paused ?
-        <button onClick={this.unpause.bind(this)}>Unpause</button> :
-        <button onClick={this.pause.bind(this)}>Pause</button>}
-      <button onClick={this.reset.bind(this)}>Reset</button>
-      <br/><br/>
-      <button
-        onClick={this.clearAllTimers.bind(this)}
-        style={{ width: 'auto' }}
-        title="Clear all saved timers"
-      >Clear saved timers</button>
+        <button onClick={this.pauseButtonStart.bind(this)} className="button symbol-button">
+          <i className="material-icons">play_arrow</i></button> :
+        <button onClick={this.pause.bind(this)} className="button symbol-button">
+          <i className="material-icons">pause</i></button>}
+      <button onClick={this.reset.bind(this)} className="button large-text-button">Reset</button>
+      <br /><br /><br /><br /><br />
+
+      <div className="settings-container">
+        <button
+          className={'toggle-input-mode-btn right' + (this.state.useNLPInput ? ' transition' : '')}
+          onClick={() => this.toggleInputType(true)}
+          title="Clear time input fields"
+        ><p>Text Input</p></button>
+        <button
+          className={'toggle-input-mode-btn left' + (!this.state.useNLPInput ? ' transition' : '')}
+          onClick={() => this.toggleInputType(false)}
+          title="Clear time input fields"
+        ><p>Number Input</p></button>
+        <br /><br />
+
+        <div id="hms-nlp-input" style={{ 'display': (this.state.useNLPInput ? 'block' : 'none') }}>
+          <input
+            className="text-input-fullwidth" placeholder="Time, write in english!"
+            name="nlp-input" type="text" title="Text input"
+          />
+        </div>
+        <div id="hms-number-input" style={{ 'display': (!this.state.useNLPInput ? 'block' : 'none') }}>
+          {['hours', 'minutes', 'seconds'].map(name =>
+            <input
+              name={name} key={name} type="number" placeholder={(name[0] + name[0]).toUpperCase()} title={name}
+              className="time" value={this.state['input_' + name]}
+              onChange={this.handleTimeInputChange.bind(this)}
+              onBlur={this.handleTimeInputBlur.bind(this)}
+              onKeyPress={this.handleTimeInputEnter.bind(this)}
+            />
+          )}
+          <button
+            className="button delete-button"
+            style={{ 'marginLeft': '20px' }}
+            onClick={this.resetInput.bind(this)}
+            title="Clear time input fields"
+          ><i className="material-icons">clear</i></button>
+        </div>
+
+        <br/>
+        <input
+          name="name" type="text" placeholder="Timer name"
+          className="text-input-fullwidth"
+          size="15" title="Create or load a timer with given name"
+          value={this.state.input_name}
+          onChange={event => this.setState({ input_name: event.target.value })}
+          onBlur={this.handleSetName.bind(this)}
+          onKeyPress={event => {
+            if (event.key === 'Enter') this.handleSetName();
+          }}
+        />
+        <br/><br/>
+        
+        <button
+          className="text-button"
+          onClick={this.clearAllTimers.bind(this)}
+          title="Clear all saved timers"
+        >Clear saved timers</button>
+      </div>
+
+      <p className="bottom-text">
+        <a href="https://github.com/hellomouse/timer">
+          Project on github: Hellomouse (c) {(new Date()).getFullYear()}</a></p>
     </div>;
   }
 }
